@@ -39,15 +39,13 @@ test("init, setState, version = 10", async () => {
   await sleep(100); // wait update asyncStorage;
   expect(await store.getItem(KEY)).toBe(toStorageValue("change", 10));
 
-  act(async () => {
-    await result.current[1]("async change"); // async setState
-  });
+  result.current[1]("async change"); // setState
+  await sleep(300);
   expect(result.current[0]).toBe("async change");
   expect(await store.getItem(KEY)).toBe(toStorageValue("async change", 10));
 
-  act(async () => {
-    await result.current[1](prev => prev + " callback"); // async setState callback
-  });
+  result.current[1](prev => prev + " callback"); // setState callback
+  await sleep(300);
   expect(result.current[0]).toBe("async change callback");
   expect(await store.getItem(KEY)).toBe(toStorageValue("async change callback", 10));
   
@@ -55,7 +53,7 @@ test("init, setState, version = 10", async () => {
 
 test("restore state", async () => {
   const { result } = renderHook(() => usePersistStorage(KEY, "test"));
-
+  
   await sleep(300); // wait restore
   expect(result.current[0]).toBe("async change callback");
   expect(typeof result.current[1]).toBe("function");

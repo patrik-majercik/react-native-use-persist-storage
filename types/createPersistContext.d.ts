@@ -1,7 +1,7 @@
 import React from "react";
-import { UsePersistStorageOptions, AsyncSetState } from "./usePersistStorage";
-export declare type PersistContext<T> = [T, AsyncSetState<T>, boolean];
-declare const createPersistContext: <T extends {}>({ storageKey, defaultData, options }: {
+import { SetState, UsePersistStorageOptions } from "./usePersistStorage";
+export declare type PersistContext<T> = [T, SetState, boolean];
+declare const createPersistContext: <T extends {}>({ storageKey, defaultData, options, }: {
     storageKey: string;
     defaultData: T;
     options?: UsePersistStorageOptions<T> | undefined;
@@ -10,6 +10,6 @@ declare const createPersistContext: <T extends {}>({ storageKey, defaultData, op
         persist?: boolean | undefined;
     }>;
     Context: React.Context<PersistContext<T>>;
-    useData: () => PersistContext<T>;
+    useData: <Selector extends (state: PersistContext<T>) => any>(selector: Selector) => ReturnType<Selector>;
 };
 export default createPersistContext;

@@ -23,9 +23,7 @@ export type UsePersistStorageOptions<Value = any> = {
 };
 
 type CallbackFn<S> = (prev: S) => S;
-export type AsyncSetState<S = any> = (
-  stateOrCallbackFn: S | CallbackFn<S>
-) => Promise<void>;
+export type SetState<S = any> = (stateOrCallbackFn: S | CallbackFn<S>) => void;
 
 /**
  * usePersistStorage will return state that'll be consistent with your storage.
@@ -42,9 +40,9 @@ const usePersistStorage = <Value>(
     version = defaultOptions.version,
     persist = defaultOptions.persist,
     migrate = defaultOptions.migrate,
-    sensitive = defaultOptions.sensitive
+    sensitive = defaultOptions.sensitive,
   }: UsePersistStorageOptions<Value> = defaultOptions
-): [Value, AsyncSetState<Value>, boolean] => {
+): [Value, SetState, boolean] => {
   const currentVersion = useRef<number>(version || 0);
   const [state, setState] = useState<Value>(initialValue);
   const [restored, setRestored] = useState<boolean>(false);
@@ -97,12 +95,11 @@ const usePersistStorage = <Value>(
               parsedValue = migrate({
                 key,
                 state: parsedValue,
-                version: currentVersion.current
+                version: currentVersion.current,
               });
-              currentVersion.current = parsedValue._currentVersion;
-              await setValueToStorage(parsedValue.value);
             }
 
+            currentVersion.current = parsedValue._currentVersion;
             setState(parsedValue.value);
             if (debug) {
               console.debug(
@@ -136,19 +133,21 @@ const usePersistStorage = <Value>(
     }
   }, []);
 
-  const asyncSetState: AsyncSetState<Value> = async stateOrCallbackFn => {
-    const newValue: Value =
-      stateOrCallbackFn instanceof Function
-        ? stateOrCallbackFn(state)
-        : stateOrCallbackFn;
-
-    setState(newValue);
-    if (persist) {
-      await setValueToStorage(newValue);
+  useEffect(() => {
+    if (persist && state !== initialValue) {
+      setValueToStorage(state);
     }
+  }, [state]);
+
+  const mySetState: SetState = (stateOrCallbackFn) => {
+    setState((oldState) => {
+      return stateOrCallbackFn instanceof Function
+        ? stateOrCallbackFn(oldState)
+        : stateOrCallbackFn;
+    });
   };
 
-  return [state, asyncSetState, restored];
+  return [state, mySetState, restored];
 };
 
 export default usePersistStorage;

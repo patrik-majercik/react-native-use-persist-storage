@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.1",
+    "react-context-selector": "^1.0.3",
     "react-native-sensitive-info": "^5.5.4"
   },
   "devDependencies": {

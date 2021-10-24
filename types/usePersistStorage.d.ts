@@ -12,6 +12,6 @@ export declare type UsePersistStorageOptions<Value = any> = {
     sensitive?: false | RNSensitiveInfoOptions;
 };
 declare type CallbackFn<S> = (prev: S) => S;
-export declare type AsyncSetState<S = any> = (stateOrCallbackFn: S | CallbackFn<S>) => Promise<void>;
-declare const usePersistStorage: <Value>(key: string, initialValue: Value | (() => Value), { debug, version, persist, migrate, sensitive }?: UsePersistStorageOptions<Value>) => [Value, AsyncSetState<Value>, boolean];
+export declare type SetState<S = any> = (stateOrCallbackFn: S | CallbackFn<S>) => void;
+declare const usePersistStorage: <Value>(key: string, initialValue: Value | (() => Value), { debug, version, persist, migrate, sensitive, }?: UsePersistStorageOptions<Value>) => [Value, SetState<any>, boolean];
 export default usePersistStorage;

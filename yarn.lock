@@ -5433,6 +5433,11 @@ range-parser@~1.2.1:
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
+react-context-selector@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-context-selector/-/react-context-selector-1.0.3.tgz#0f82e7942dbf0e126a1a37ae60a137d577db3603"
+  integrity sha512-8zPfNSSGgCXgOMvfR+gFAsagTomvlw6+NOz/vE2Qn7UcBL4Ac4ZJYteNcU4PClyqagk7BW4Dj8uuTJQ/Ln76tg==
+
 react-devtools-core@^3.6.3:
   version "3.6.3"
   resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-3.6.3.tgz#977d95b684c6ad28205f0c62e1e12c5f16675814"

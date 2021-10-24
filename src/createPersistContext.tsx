@@ -1,19 +1,16 @@
 import React from "react";
+import { createContextSelector } from "react-context-selector";
 import usePersistStorage, {
+  SetState,
   UsePersistStorageOptions,
-  AsyncSetState
 } from "./usePersistStorage";
 
-export type PersistContext<T> = [
-  T,
-  AsyncSetState<T>,
-  boolean
-];
+export type PersistContext<T> = [T, SetState, boolean];
 
 const createPersistContext = <T extends {}>({
   storageKey,
   defaultData,
-  options
+  options,
 }: {
   storageKey: string;
   defaultData: T;
@@ -23,43 +20,36 @@ const createPersistContext = <T extends {}>({
 
   const Context = React.createContext<PersistContext<T>>([
     createDefaultData(), // state
-    async () => {;}, // update state function
-    false // restored
+    () => {}, // update state function
+    false, // restored
   ]);
+
+  const [Cleaner, useContextSelector] = createContextSelector(Context);
 
   const Provider: React.FC<{
     persist?: boolean;
-  }> = props => {
+  }> = (props) => {
     const [data, setData, restored] = usePersistStorage<T>(
       storageKey,
       createDefaultData,
       {
         persist: props.persist,
-        ...options
+        ...options,
       }
     );
 
     return (
       <Context.Provider value={[data, setData, restored]}>
+        <Cleaner />
         {props.children}
       </Context.Provider>
     );
   };
 
-  const useData = () => {
-    const context = React.useContext(Context);
-    if (!context) {
-      throw new Error(
-        `Context error: context [${storageKey}] must be used within a Provider`
-      );
-    }
-    return context;
-  };
-
   return {
     Provider,
     Context,
-    useData
+    useData: useContextSelector,
   };
 };
 

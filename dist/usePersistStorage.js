@@ -85,42 +85,38 @@ var usePersistStorage = function (key, initialValue, _a) {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            _a.trys.push([0, 7, , 8]);
+                            _a.trys.push([0, 5, , 6]);
                             return [4, Storage.getItem(key)];
                         case 1:
                             storageValue = _a.sent();
-                            if (!storageValue) return [3, 4];
+                            if (!storageValue) return [3, 2];
                             parsedValue = JSON.parse(storageValue || "null");
                             if (parsedValue && parsedValue._currentVersion === undefined) {
                                 parsedValue = utils_1.transformStorageValue(parsedValue, currentVersion.current);
                             }
-                            if (!migrate) return [3, 3];
-                            parsedValue = migrate({
-                                key: key,
-                                state: parsedValue,
-                                version: currentVersion.current
-                            });
+                            if (migrate) {
+                                parsedValue = migrate({
+                                    key: key,
+                                    state: parsedValue,
+                                    version: currentVersion.current,
+                                });
+                            }
                             currentVersion.current = parsedValue._currentVersion;
-                            return [4, setValueToStorage(parsedValue.value)];
-                        case 2:
-                            _a.sent();
-                            _a.label = 3;
-                        case 3:
                             setState(parsedValue.value);
                             if (debug) {
                                 console.debug(logPrefix + "[PersistStorage]: restore " + key + ": ", parsedValue);
                             }
-                            return [3, 6];
-                        case 4: return [4, setValueToStorage(state)];
-                        case 5:
+                            return [3, 4];
+                        case 2: return [4, setValueToStorage(state)];
+                        case 3:
                             _a.sent();
-                            _a.label = 6;
-                        case 6: return [3, 8];
-                        case 7:
+                            _a.label = 4;
+                        case 4: return [3, 6];
+                        case 5:
                             err_2 = _a.sent();
                             console.error(err_2);
-                            return [3, 8];
-                        case 8:
+                            return [3, 6];
+                        case 6:
                             setRestored(true);
                             return [2];
                     }
@@ -146,24 +142,18 @@ var usePersistStorage = function (key, initialValue, _a) {
             }
         }
     }, []);
-    var asyncSetState = function (stateOrCallbackFn) { return __awaiter(void 0, void 0, void 0, function () {
-        var newValue;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    newValue = stateOrCallbackFn instanceof Function
-                        ? stateOrCallbackFn(state)
-                        : stateOrCallbackFn;
-                    setState(newValue);
-                    if (!persist) return [3, 2];
-                    return [4, setValueToStorage(newValue)];
-                case 1:
-                    _a.sent();
-                    _a.label = 2;
-                case 2: return [2];
-            }
+    react_1.useEffect(function () {
+        if (persist && state !== initialValue) {
+            setValueToStorage(state);
+        }
+    }, [state]);
+    var mySetState = function (stateOrCallbackFn) {
+        setState(function (oldState) {
+            return stateOrCallbackFn instanceof Function
+                ? stateOrCallbackFn(oldState)
+                : stateOrCallbackFn;
         });
-    }); };
-    return [state, asyncSetState, restored];
+    };
+    return [state, mySetState, restored];
 };
 exports.default = usePersistStorage;
