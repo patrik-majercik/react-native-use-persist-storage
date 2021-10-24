@@ -35,7 +35,12 @@ var createPersistContext = function (_a) {
     return {
         Provider: Provider,
         Context: Context,
-        useData: useContextSelector,
+        useData: function (selector) {
+            return useContextSelector(function (_a) {
+                var data = _a[0];
+                return selector(data);
+            });
+        },
     };
 };
 exports.default = createPersistContext;

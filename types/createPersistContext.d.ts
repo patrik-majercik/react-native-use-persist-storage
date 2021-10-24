@@ -10,6 +10,6 @@ declare const createPersistContext: <T extends {}>({ storageKey, defaultData, op
         persist?: boolean | undefined;
     }>;
     Context: React.Context<PersistContext<T>>;
-    useData: <Selector extends (state: PersistContext<T>) => any>(selector: Selector) => ReturnType<Selector>;
+    useData: (selector: (data: T) => any) => any;
 };
 export default createPersistContext;
