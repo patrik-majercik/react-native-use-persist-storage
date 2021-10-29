@@ -49,8 +49,7 @@ const createPersistContext = <T extends {}>({
   return {
     Provider,
     Context,
-    useData: (selector: (data: T) => any) =>
-      useContextSelector(([data]) => selector(data)),
+    useData: useContextSelector,
   };
 };
 
