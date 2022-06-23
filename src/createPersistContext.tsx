@@ -26,9 +26,10 @@ const createPersistContext = <T extends {}>({
 
   const [Cleaner, useContextSelector] = createContextSelector(Context);
 
-  const Provider: React.FC<{
+  const Provider = (props: {
+    children: React.ReactNode;
     persist?: boolean;
-  }> = (props) => {
+  }) => {
     const [data, setData, restored] = usePersistStorage<T>(
       storageKey,
       createDefaultData,

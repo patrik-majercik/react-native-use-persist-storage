@@ -6,9 +6,10 @@ declare const createPersistContext: <T extends {}>({ storageKey, defaultData, op
     defaultData: T;
     options?: UsePersistStorageOptions<T> | undefined;
 }) => {
-    Provider: React.FC<{
+    Provider: (props: {
+        children: React.ReactNode;
         persist?: boolean | undefined;
-    }>;
+    }) => JSX.Element;
     Context: React.Context<PersistContext<T>>;
     useData: <Selector extends (state: PersistContext<T>) => any>(selector: Selector) => ReturnType<Selector>;
 };
